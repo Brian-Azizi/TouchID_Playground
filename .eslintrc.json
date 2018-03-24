@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": ["react"],
+  "parser": "babel-eslint",
+  "rules": {
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react/forbid-prop-types": [0],
+    "react/require-default-props": [0],
+    "global-require": [0],
+    "no-underscore-dangle": [0],
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+    "react/prop-types": [0],
+    "no-mixed-operators": 0,
+    "react/no-array-index-key": 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "no-confusing-arrow": 0,
+    "no-nested-ternary": 0,
+    "arrow-parens": 0,
+    "react/jsx-wrap-multilines": 0,
+    "react/jsx-indent-props": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "indent": 0,
+    "react/jsx-indent": 0,
+    "no-else-return": 0,
+    "react/prefer-stateless-function": 0,
+    "jsx-a11y/href-no-hash": 0,
+    "import/prefer-default-export": 0
+  }
+}
