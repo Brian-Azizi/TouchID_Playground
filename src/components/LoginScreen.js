@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     paddingHorizontal: 28,
-    paddingVertical: 18,
+    paddingVertical: 20,
   },
   formContainer: {
     flex: 1,

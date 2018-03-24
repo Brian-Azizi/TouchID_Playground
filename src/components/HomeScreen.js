@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Button } from './ui';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,6 +31,10 @@ const HomeScreen = props => (
     <Text style={styles.subtitle}>You are now logged in!</Text>
   </View>
 );
+
+HomeScreen.navigationOptions = ({ navigation }) => ({
+  headerRight: <Button onPress={() => navigation.navigate('Settings')} title="Settings" />,
+});
 
 export default connect(state => ({
   username: state.login.username,
