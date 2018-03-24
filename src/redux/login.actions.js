@@ -1,6 +1,7 @@
 import { login, logout, authenticate } from '../api';
 import NavigatorService from './navigator';
 import { setToken, clearToken } from './session.actions';
+import { enableTouchId } from './touchId.actions';
 
 export const LOGIN = {
   REQUEST: 'LOGIN.REQUEST',
@@ -20,12 +21,15 @@ export const AUTHENTICATE = {
   ERROR: 'AUTHENTICATE.ERROR',
 };
 
-export const fetchLogin = (username, password) => dispatch => {
+export const fetchLogin = (username, password, enableTouchIdOnSuccess) => dispatch => {
   dispatch({ type: LOGIN.REQUEST });
   login(username, password)
     .then(token => {
       dispatch({ type: LOGIN.SUCCESS, username });
       dispatch(setToken(token));
+      if (enableTouchIdOnSuccess) {
+        dispatch(enableTouchId(username, password));
+      }
       NavigatorService.navigate('HomeStack');
     })
     .catch(error => dispatch({ type: LOGIN.ERROR, error: error.message }));

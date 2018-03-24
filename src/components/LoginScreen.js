@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Keyboard,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   TouchableWithoutFeedback,
@@ -56,12 +57,18 @@ class LoginScreen extends React.PureComponent {
   state = {
     username: '',
     password: '',
+    enableTouchIdOnSuccess: false,
   };
 
-  handleLogin = () => this.props.fetchLogin(this.state.username, this.state.password);
+  handleLogin = () =>
+    this.props.fetchLogin(
+      this.state.username,
+      this.state.password,
+      this.state.enableTouchIdOnSuccess,
+    );
 
   render() {
-    const { error, loading } = this.props;
+    const { error, loading, shouldAskToEnableTouchId } = this.props;
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -86,6 +93,17 @@ class LoginScreen extends React.PureComponent {
               autoCapitalize="none"
               autoCorrect={false}
             />
+            {shouldAskToEnableTouchId && (
+              <View style={styles.switchRow}>
+                <Text style={styles.formLabel}>Use Touch ID for future logins?</Text>
+                <Switch
+                  value={this.state.enableTouchIdOnSuccess}
+                  onValueChange={enableTouchIdOnSuccess =>
+                    this.setState({ enableTouchIdOnSuccess })
+                  }
+                />
+              </View>
+            )}
             {error && <Text style={styles.error}>{error}</Text>}
             <Button title="Log In" loading={loading} onPress={this.handleLogin} />
           </View>
@@ -99,6 +117,8 @@ export default connect(
   state => ({
     loading: state.login.loading,
     error: state.login.error,
+    shouldAskToEnableTouchId:
+      state.touchId.isSupported && !state.touchId.error && !state.touchId.isEnabled,
   }),
   {
     fetchLogin,
