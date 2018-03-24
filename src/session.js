@@ -1,4 +1,4 @@
-import { SET_TOKEN, GET_TOKEN } from './session.actions';
+import { SET_TOKEN, GET_TOKEN, CLEAR_TOKEN } from './session.actions';
 
 const initialState = {
   token: null,
@@ -10,6 +10,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SET_TOKEN.REQUEST:
     case GET_TOKEN.REQUEST:
+    case CLEAR_TOKEN.REQUEST:
       return {
         ...state,
         loading: true,
@@ -24,8 +25,11 @@ export default (state = initialState, action) => {
         error: null,
       };
     }
+    case CLEAR_TOKEN.SUCCESS:
+      return initialState;
     case SET_TOKEN.ERROR:
-    case GET_TOKEN.ERROR: {
+    case GET_TOKEN.ERROR:
+    case CLEAR_TOKEN.ERROR: {
       const { error } = action;
       return {
         ...state,

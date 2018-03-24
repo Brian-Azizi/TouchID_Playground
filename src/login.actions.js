@@ -1,6 +1,6 @@
 import { login, logout, authenticate } from './api';
 import NavigatorService from './navigator';
-import { setToken } from './session.actions';
+import { setToken, clearToken } from './session.actions';
 
 export const LOGIN = {
   REQUEST: 'LOGIN.REQUEST',
@@ -37,6 +37,7 @@ export const fetchLogout = () => (dispatch, getState) => {
   logout(token)
     .then(() => {
       dispatch({ type: LOGOUT.SUCCESS });
+      dispatch(clearToken());
       NavigatorService.navigate('WelcomeStack');
     })
     .catch(error => dispatch({ type: LOGOUT.ERROR, error: error.message }));
