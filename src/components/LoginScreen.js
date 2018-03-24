@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 
 import { Button } from './ui';
-import { fetchLogin } from '../login.actions';
+import { fetchLogin } from '../redux/login.actions';
 
 export const styles = StyleSheet.create({
   container: {

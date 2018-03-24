@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Button } from './ui';
-import { fetchLogout } from '../login.actions';
+import { fetchLogout } from '../redux/login.actions';
 
 export const styles = StyleSheet.create({
   container: {

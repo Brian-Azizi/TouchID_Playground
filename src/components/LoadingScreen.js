@@ -2,8 +2,8 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
-import { startSession } from '../session.actions';
-import { getTouchIdSupport } from '../touchId.actions';
+import { startSession } from '../redux/session.actions';
+import { getTouchIdSupport } from '../redux/touchId.actions';
 
 export const style = StyleSheet.create({
   container: {

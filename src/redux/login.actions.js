@@ -1,4 +1,4 @@
-import { login, logout, authenticate } from './api';
+import { login, logout, authenticate } from '../api';
 import NavigatorService from './navigator';
 import { setToken, clearToken } from './session.actions';
 
