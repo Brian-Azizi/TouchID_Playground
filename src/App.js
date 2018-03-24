@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 
 import login from './login';
 import session from './session';
+import touchId from './touchId';
 import NavigatorService from './navigator';
 import WelcomeStack from './components/WelcomeStack';
 import HomeStack from './components/HomeStack';
@@ -14,6 +15,7 @@ import LoadingScreen from './components/LoadingScreen';
 const reducers = combineReducers({
   login,
   session,
+  touchId,
 });
 
 const store = createStore(reducers, applyMiddleware(thunk));
