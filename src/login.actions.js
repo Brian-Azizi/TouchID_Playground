@@ -1,5 +1,6 @@
 import { login, logout } from './api';
 import NavigatorService from './navigator';
+import { setToken } from './session.actions';
 
 export const LOGIN = {
   REQUEST: 'LOGIN.REQUEST',
@@ -16,8 +17,9 @@ export const LOGOUT = {
 export const fetchLogin = (username, password) => dispatch => {
   dispatch({ type: LOGIN.REQUEST });
   login(username, password)
-    .then(userToken => {
-      dispatch({ type: LOGIN.SUCCESS, username, userToken });
+    .then(token => {
+      dispatch({ type: LOGIN.SUCCESS, username });
+      dispatch(setToken(token));
       NavigatorService.navigate('HomeStack');
     })
     .catch(error => dispatch({ type: LOGIN.ERROR, error: error.message }));
@@ -25,8 +27,8 @@ export const fetchLogin = (username, password) => dispatch => {
 
 export const fetchLogout = () => (dispatch, getState) => {
   dispatch({ type: LOGOUT.REQUEST });
-  const { userToken } = getState().login;
-  logout(userToken)
+  const { token } = getState().session;
+  logout(token)
     .then(() => {
       dispatch({ type: LOGOUT.SUCCESS });
       NavigatorService.navigate('WelcomeStack');

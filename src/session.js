@@ -1,42 +1,37 @@
-import { LOGIN, LOGOUT } from './login.actions';
+import { SET_TOKEN } from './session.actions';
 
 const initialState = {
+  token: null,
   loading: false,
   error: null,
-  username: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN.REQUEST:
-    case LOGOUT.REQUEST: {
+    case SET_TOKEN.REQUEST:
       return {
         ...state,
         loading: true,
       };
-    }
-    case LOGIN.SUCCESS: {
-      const { username } = action;
+    case SET_TOKEN.SUCCESS: {
+      const { token } = action;
       return {
         ...state,
-        username,
+        token,
         loading: false,
         error: null,
       };
     }
-    case LOGOUT.SUCCESS: {
-      return initialState;
-    }
-    case LOGIN.ERROR:
-    case LOGOUT.ERROR: {
+    case SET_TOKEN.ERROR: {
       const { error } = action;
       return {
         ...state,
-        error,
         loading: false,
+        error,
       };
     }
-    default:
+    default: {
       return state;
+    }
   }
 };

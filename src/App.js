@@ -5,12 +5,14 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import login from './login';
+import session from './session';
 import NavigatorService from './navigator';
 import WelcomeStack from './components/WelcomeStack';
 import HomeStack from './components/HomeStack';
 
 const reducers = combineReducers({
   login,
+  session,
 });
 
 const store = createStore(reducers, applyMiddleware(thunk));
