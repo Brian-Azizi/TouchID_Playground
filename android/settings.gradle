@@ -1,0 +1,3 @@
+rootProject.name = 'Touch_ID_Playground'
+
+include ':app'
