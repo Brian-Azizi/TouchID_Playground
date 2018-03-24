@@ -7,8 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { Button } from './ui';
+import { fetchLogin } from '../login.actions';
 
 export const styles = StyleSheet.create({
   container: {
@@ -51,15 +53,16 @@ export const styles = StyleSheet.create({
 });
 
 class LoginScreen extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-    };
-  }
+  state = {
+    username: '',
+    password: '',
+  };
+
+  handleLogin = () => this.props.fetchLogin(this.state.username, this.state.password);
 
   render() {
+    const { error, loading } = this.props;
+
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -83,7 +86,8 @@ class LoginScreen extends React.PureComponent {
               autoCapitalize="none"
               autoCorrect={false}
             />
-            <Button title="Log In" />
+            {error && <Text style={styles.error}>{error}</Text>}
+            <Button title="Log In" loading={loading} onPress={this.handleLogin} />
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -91,4 +95,12 @@ class LoginScreen extends React.PureComponent {
   }
 }
 
-export default LoginScreen;
+export default connect(
+  state => ({
+    loading: state.login.loading,
+    error: state.login.error,
+  }),
+  {
+    fetchLogin,
+  },
+)(LoginScreen);
