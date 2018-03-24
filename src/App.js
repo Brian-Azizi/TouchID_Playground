@@ -9,6 +9,7 @@ import session from './session';
 import NavigatorService from './navigator';
 import WelcomeStack from './components/WelcomeStack';
 import HomeStack from './components/HomeStack';
+import LoadingScreen from './components/LoadingScreen';
 
 const reducers = combineReducers({
   login,
@@ -18,6 +19,7 @@ const reducers = combineReducers({
 const store = createStore(reducers, applyMiddleware(thunk));
 
 const BaseNavigator = new SwitchNavigator({
+  Loading: { screen: LoadingScreen },
   WelcomeStack: { screen: WelcomeStack },
   HomeStack: { screen: HomeStack },
 });

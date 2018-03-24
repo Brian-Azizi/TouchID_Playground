@@ -1,4 +1,4 @@
-import { SET_TOKEN } from './session.actions';
+import { SET_TOKEN, GET_TOKEN } from './session.actions';
 
 const initialState = {
   token: null,
@@ -9,11 +9,13 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_TOKEN.REQUEST:
+    case GET_TOKEN.REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case SET_TOKEN.SUCCESS: {
+    case SET_TOKEN.SUCCESS:
+    case GET_TOKEN.SUCCESS: {
       const { token } = action;
       return {
         ...state,
@@ -22,7 +24,8 @@ export default (state = initialState, action) => {
         error: null,
       };
     }
-    case SET_TOKEN.ERROR: {
+    case SET_TOKEN.ERROR:
+    case GET_TOKEN.ERROR: {
       const { error } = action;
       return {
         ...state,

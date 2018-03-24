@@ -1,4 +1,4 @@
-import { login, logout } from './api';
+import { login, logout, authenticate } from './api';
 import NavigatorService from './navigator';
 import { setToken } from './session.actions';
 
@@ -12,6 +12,12 @@ export const LOGOUT = {
   REQUEST: 'LOGOUT.REQUEST',
   SUCCESS: 'LOGOUT.SUCCESS',
   ERROR: 'LOGOUT.ERROR',
+};
+
+export const AUTHENTICATE = {
+  REQUEST: 'AUTHENTICATE.REQUEST',
+  SUCCESS: 'AUTHENTICATE.SUCCESS',
+  ERROR: 'AUTHENTICATE.ERROR',
 };
 
 export const fetchLogin = (username, password) => dispatch => {
@@ -34,4 +40,17 @@ export const fetchLogout = () => (dispatch, getState) => {
       NavigatorService.navigate('WelcomeStack');
     })
     .catch(error => dispatch({ type: LOGOUT.ERROR, error: error.message }));
+};
+
+export const fetchAuthenticate = token => dispatch => {
+  dispatch({ type: AUTHENTICATE.REQUEST });
+  authenticate(token)
+    .then(username => {
+      dispatch({ type: AUTHENTICATE.SUCCESS, username });
+      NavigatorService.navigate('HomeStack');
+    })
+    .catch(error => {
+      dispatch({ type: AUTHENTICATE.ERROR, error: error.message });
+      NavigatorService.navigate('WelcomeStack');
+    });
 };
