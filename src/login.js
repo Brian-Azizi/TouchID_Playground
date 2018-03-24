@@ -1,4 +1,4 @@
-import { LOGIN } from './login.actions';
+import { LOGIN, LOGOUT } from './login.actions';
 
 const initialState = {
   loading: false,
@@ -9,7 +9,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN.REQUEST: {
+    case LOGIN.REQUEST:
+    case LOGOUT.REQUEST: {
       return {
         ...state,
         loading: true,
@@ -25,7 +26,11 @@ export default (state = initialState, action) => {
         error: null,
       };
     }
-    case LOGIN.ERROR: {
+    case LOGOUT.SUCCESS: {
+      return initialState;
+    }
+    case LOGIN.ERROR:
+    case LOGOUT.ERROR: {
       const { error } = action;
       return {
         ...state,
