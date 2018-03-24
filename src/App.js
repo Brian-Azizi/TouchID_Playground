@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import login from './login';
 import NavigatorService from './navigator';
 import WelcomeStack from './components/WelcomeStack';
+import HomeStack from './components/HomeStack';
 
 const reducers = combineReducers({
   login,
@@ -16,6 +17,7 @@ const store = createStore(reducers, applyMiddleware(thunk));
 
 const BaseNavigator = new SwitchNavigator({
   WelcomeStack: { screen: WelcomeStack },
+  HomeStack: { screen: HomeStack },
 });
 
 const App = () => (
