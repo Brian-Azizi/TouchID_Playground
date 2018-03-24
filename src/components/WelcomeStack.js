@@ -1,10 +1,12 @@
 import { StackNavigator } from 'react-navigation';
 
 import WelcomeScreen from './WelcomeScreen';
+import LoginScreen from './LoginScreen';
 
 const WelcomeStack = StackNavigator(
   {
     Welcome: { screen: WelcomeScreen },
+    Login: { screen: LoginScreen },
   },
   {
     navigationOptions: {

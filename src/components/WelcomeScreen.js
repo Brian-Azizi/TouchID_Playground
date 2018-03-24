@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { Button } from './ui';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,5 +30,9 @@ const WelcomeScreen = () => (
     <Text style={styles.subtitle}>Please press &quot;Log in&quot; to get started</Text>
   </View>
 );
+
+WelcomeScreen.navigationOptions = ({ navigation }) => ({
+  headerRight: <Button onPress={() => navigation.navigate('Login')} title="Log In" />,
+});
 
 export default WelcomeScreen;
