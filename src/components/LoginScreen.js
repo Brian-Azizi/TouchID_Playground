@@ -12,11 +12,12 @@ import { connect } from 'react-redux';
 
 import { Button } from './ui';
 import { fetchLogin } from '../redux/login.actions';
+import { fetchTouchIdLogin } from '../redux/touchId.actions';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     backgroundColor: '#F5FCFF',
   },
   title: {
@@ -51,6 +52,9 @@ export const styles = StyleSheet.create({
     padding: 8,
     fontSize: 18,
   },
+  button: {
+    paddingBottom: 60,
+  },
 });
 
 class LoginScreen extends React.PureComponent {
@@ -68,7 +72,13 @@ class LoginScreen extends React.PureComponent {
     );
 
   render() {
-    const { error, loading, shouldAskToEnableTouchId } = this.props;
+    const {
+      error,
+      loading,
+      promptTouchId,
+      shouldAskToEnableTouchId,
+      touchIdLoading,
+    } = this.props;
 
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -107,6 +117,15 @@ class LoginScreen extends React.PureComponent {
             {error && <Text style={styles.error}>{error}</Text>}
             <Button title="Log In" loading={loading} onPress={this.handleLogin} />
           </View>
+          {promptTouchId && (
+            <View style={styles.button}>
+              <Button
+                onPress={this.props.fetchTouchIdLogin}
+                loading={touchIdLoading || loading}
+                title="Log In using Touch ID"
+              />
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     );
@@ -118,9 +137,12 @@ export default connect(
     loading: state.login.loading,
     error: state.login.error,
     shouldAskToEnableTouchId:
-      state.touchId.isSupported && !state.touchId.error && !state.touchId.isEnabled,
+      state.touchId.isSupported && !state.touchId.isEnabled && !state.touchId.error,
+    promptTouchId: state.touchId.isSupported && state.touchId.isEnabled && !state.touchId.error,
+    touchIdLoading: state.touchId.loading,
   }),
   {
     fetchLogin,
+    fetchTouchIdLogin,
   },
 )(LoginScreen);

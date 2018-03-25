@@ -1,6 +1,8 @@
 import TouchID from 'react-native-touch-id';
 import { setGenericPassword, getGenericPassword } from 'react-native-keychain';
 
+import { fetchLogin } from './login.actions';
+
 export const GET_TOUCH_ID_SUPPORT = {
   REQUEST: 'GET_TOUCH_ID_SUPPORT.REQUEST',
   SUCCESS: 'GET_TOUCH_ID_SUPPORT.SUCCESS',
@@ -17,6 +19,12 @@ export const GET_TOUCH_ID_CREDENTIALS = {
   REQUEST: 'GET_TOUCH_ID_CREDENTIALS.REQUEST',
   SUCCESS: 'GET_TOUCH_ID_CREDENTIALS.SUCCESS',
   ERROR: 'GET_TOUCH_ID_CREDENTIALS.ERROR',
+};
+
+export const TOUCH_ID_LOGIN = {
+  REQUEST: 'TOUCH_ID_LOGIN.REQUEST',
+  SUCCESS: 'TOUCH_ID_LOGIN.SUCCESS',
+  ERROR: 'TOUCH_ID_LOGIN.ERROR',
 };
 
 export const getTouchIdSupport = () => dispatch => {
@@ -44,4 +52,17 @@ export const getTouchIdCredentials = () => dispatch => {
       dispatch({ type: GET_TOUCH_ID_CREDENTIALS.SUCCESS, isEnabled });
     })
     .catch(error => dispatch({ type: GET_TOUCH_ID_CREDENTIALS.ERROR, error: error.message }));
+};
+
+export const fetchTouchIdLogin = () => dispatch => {
+  dispatch({ type: TOUCH_ID_LOGIN.REQUEST });
+  getGenericPassword()
+    .then(credentials => {
+      const { username, password } = credentials;
+      TouchID.authenticate(`to login with username "${username}"`).then(() => {
+        dispatch(fetchLogin(username, password, false));
+        dispatch({ type: TOUCH_ID_LOGIN.SUCCESS });
+      }).catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
+    })
+    .catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
 };
