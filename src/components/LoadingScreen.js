@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import { startSession } from '../redux/session.actions';
-import { getTouchIdSupport } from '../redux/touchId.actions';
+import { getTouchIdSupport, getTouchIdCredentials } from '../redux/touchId.actions';
 
 export const style = StyleSheet.create({
   container: {
@@ -19,6 +19,7 @@ class LoadingScreen extends React.PureComponent {
   componentDidMount() {
     this.props.startSession();
     this.props.getTouchIdSupport();
+    this.props.getTouchIdCredentials();
   }
 
   render() {
@@ -33,4 +34,5 @@ class LoadingScreen extends React.PureComponent {
 export default connect(null, {
   startSession,
   getTouchIdSupport,
+  getTouchIdCredentials,
 })(LoadingScreen);
