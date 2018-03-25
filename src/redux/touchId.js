@@ -3,6 +3,7 @@ import {
   ENABLE_TOUCH_ID,
   GET_TOUCH_ID_CREDENTIALS,
   TOUCH_ID_LOGIN,
+  DISABLE_TOUCH_ID,
 } from './touchId.actions';
 
 const initialState = {
@@ -18,6 +19,7 @@ export default (state = initialState, action) => {
     case ENABLE_TOUCH_ID.REQUEST:
     case GET_TOUCH_ID_CREDENTIALS.REQUEST:
     case TOUCH_ID_LOGIN.REQUEST:
+    case DISABLE_TOUCH_ID.REQUEST:
       return {
         ...state,
         loading: true,
@@ -33,17 +35,24 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        isEnabled: true,
+        isEnabled: action.isEnabled,
       };
     case TOUCH_ID_LOGIN.SUCCESS:
       return {
         ...state,
         loading: false,
       };
+    case DISABLE_TOUCH_ID.SUCCESS:
+    return {
+      ...state,
+      loading: false,
+      isEnabled: false,
+    };
     case GET_TOUCH_ID_SUPPORT.ERROR:
     case ENABLE_TOUCH_ID.ERROR:
     case GET_TOUCH_ID_CREDENTIALS.ERROR:
     case TOUCH_ID_LOGIN.ERROR:
+    case DISABLE_TOUCH_ID.ERROR:
       return {
         ...state,
         loading: false,

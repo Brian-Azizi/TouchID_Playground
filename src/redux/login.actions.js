@@ -21,7 +21,12 @@ export const AUTHENTICATE = {
   ERROR: 'AUTHENTICATE.ERROR',
 };
 
-export const fetchLogin = (username, password, enableTouchIdOnSuccess) => dispatch => {
+export const fetchLogin = (
+  username,
+  password,
+  enableTouchIdOnSuccess,
+  successCallback,
+) => dispatch => {
   dispatch({ type: LOGIN.REQUEST });
   login(username, password)
     .then(token => {
@@ -30,7 +35,11 @@ export const fetchLogin = (username, password, enableTouchIdOnSuccess) => dispat
       if (enableTouchIdOnSuccess) {
         dispatch(enableTouchId(username, password));
       }
-      NavigatorService.navigate('HomeStack');
+      if (successCallback) {
+        successCallback();
+      } else {
+        NavigatorService.navigate('HomeStack');
+      }
     })
     .catch(error => dispatch({ type: LOGIN.ERROR, error: error.message }));
 };

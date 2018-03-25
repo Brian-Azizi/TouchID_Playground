@@ -1,5 +1,9 @@
 import TouchID from 'react-native-touch-id';
-import { setGenericPassword, getGenericPassword } from 'react-native-keychain';
+import {
+  setGenericPassword,
+  getGenericPassword,
+  resetGenericPassword,
+} from 'react-native-keychain';
 
 import { fetchLogin } from './login.actions';
 
@@ -25,6 +29,12 @@ export const TOUCH_ID_LOGIN = {
   REQUEST: 'TOUCH_ID_LOGIN.REQUEST',
   SUCCESS: 'TOUCH_ID_LOGIN.SUCCESS',
   ERROR: 'TOUCH_ID_LOGIN.ERROR',
+};
+
+export const DISABLE_TOUCH_ID = {
+  REQUEST: 'DISABLE_TOUCH_ID.REQUEST',
+  SUCCESS: 'DISABLE_TOUCH_ID.SUCCESS',
+  ERROR: 'DISABLE_TOUCH_ID.ERROR',
 };
 
 export const getTouchIdSupport = () => dispatch => {
@@ -65,4 +75,11 @@ export const fetchTouchIdLogin = () => dispatch => {
       }).catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
     })
     .catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
+};
+
+export const disableTouchId = () => dispatch => {
+  dispatch({ type: DISABLE_TOUCH_ID.REQUEST });
+  resetGenericPassword()
+    .then(() => dispatch({ type: DISABLE_TOUCH_ID.SUCCESS }))
+    .catch(error => dispatch({ type: DISABLE_TOUCH_ID.ERROR, error: error.message }));
 };
