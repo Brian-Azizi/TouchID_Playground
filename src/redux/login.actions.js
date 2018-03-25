@@ -24,24 +24,24 @@ export const AUTHENTICATE = {
 export const fetchLogin = (
   username,
   password,
-  enableTouchIdOnSuccess,
   successCallback,
+  errorCallback,
 ) => dispatch => {
   dispatch({ type: LOGIN.REQUEST });
   login(username, password)
     .then(token => {
       dispatch({ type: LOGIN.SUCCESS, username });
       dispatch(setToken(token));
-      if (enableTouchIdOnSuccess) {
-        dispatch(enableTouchId(username, password));
-      }
       if (successCallback) {
         successCallback();
-      } else {
-        NavigatorService.navigate('HomeStack');
       }
     })
-    .catch(error => dispatch({ type: LOGIN.ERROR, error: error.message }));
+    .catch(error => {
+      dispatch({ type: LOGIN.ERROR, error: error.message });
+      if (errorCallback) {
+        errorCallback();
+      }
+    });
 };
 
 export const fetchLogout = () => (dispatch, getState) => {

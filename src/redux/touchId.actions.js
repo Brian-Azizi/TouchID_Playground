@@ -5,6 +5,8 @@ import {
   resetGenericPassword,
 } from 'react-native-keychain';
 import { Platform } from 'react-native';
+
+import NavigatorService from './navigator';
 import { fetchLogin } from './login.actions';
 
 const FATAL_ERRORS = [
@@ -79,33 +81,39 @@ export const disableTouchId = () => dispatch => {
     .catch(error => dispatch({ type: DISABLE_TOUCH_ID.ERROR, error: error.message }));
 };
 
+const setTouchIdFatalError = () => dispatch => {
+  dispatch({
+    type: TOUCH_ID_LOGIN.ERROR,
+    error: 'Something went wrong. We have turned off Touch ID login.',
+  });
+  dispatch(disableTouchId());
+};
+
 export const fetchTouchIdLogin = () => dispatch => {
   dispatch({ type: TOUCH_ID_LOGIN.REQUEST });
   getGenericPassword()
     .then(credentials => {
       const { username, password } = credentials;
+
       TouchID.authenticate(`to login with username "${username}"`)
         .then(() => {
-          dispatch(fetchLogin(username, password, false));
-          dispatch({ type: TOUCH_ID_LOGIN.SUCCESS });
+          const onSuccess = () => {
+            dispatch({ type: TOUCH_ID_LOGIN.SUCCESS });
+            NavigatorService.navigate('HomeStack');
+          };
+          const onError = () => dispatch(setTouchIdFatalError());
+
+          dispatch(fetchLogin(username, password, onSuccess, onError));
         })
         .catch(error => {
           if (Platform.OS === 'ios' && FATAL_ERRORS.includes(error.message)) {
-            dispatch({
-              type: TOUCH_ID_LOGIN.ERROR,
-              error: 'Something went wrong. We have turned off Touch ID login.',
-            });
-            dispatch(disableTouchId());
+            dispatch(setTouchIdFatalError());
           } else {
             dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: null });
           }
         });
     })
     .catch(() => {
-      dispatch({
-        type: TOUCH_ID_LOGIN.ERROR,
-        error: 'Something went wrong. We have turned off Touch ID login.',
-      });
-      dispatch(disableTouchId()); // Wrong credentials in keychain => disable touch id
+      dispatch(setTouchIdFatalError());
     });
 };

@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 import { Button } from './ui';
 import { fetchLogin } from '../redux/login.actions';
-import { fetchTouchIdLogin } from '../redux/touchId.actions';
+import { enableTouchId, fetchTouchIdLogin } from '../redux/touchId.actions';
 
 export const styles = StyleSheet.create({
   container: {
@@ -64,12 +64,16 @@ class LoginScreen extends React.PureComponent {
     enableTouchIdOnSuccess: false,
   };
 
-  handleLogin = () =>
-    this.props.fetchLogin(
-      this.state.username,
-      this.state.password,
-      this.state.enableTouchIdOnSuccess,
-    );
+  handleLogin = () => {
+    const { username, password, enableTouchIdOnSuccess } = this.state;
+    const onSuccess = () => {
+      this.props.navigation.navigate('HomeStack');
+      if (enableTouchIdOnSuccess) {
+        this.props.enableTouchId(username, password);
+      }
+    };
+    this.props.fetchLogin(username, password, onSuccess);
+  };
 
   render() {
     const {
@@ -142,6 +146,7 @@ export default connect(
     touchIdLoading: state.touchId.loading,
   }),
   {
+    enableTouchId,
     fetchLogin,
     fetchTouchIdLogin,
   },

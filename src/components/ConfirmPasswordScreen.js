@@ -10,6 +10,7 @@ import {
 import { connect } from 'react-redux';
 
 import { fetchLogin } from '../redux/login.actions';
+import { enableTouchId } from '../redux/touchId.actions';
 import { Button } from './ui';
 
 export const styles = StyleSheet.create({
@@ -47,11 +48,15 @@ class LoginScreen extends React.PureComponent {
   };
 
   handleSubmit = () => {
+    const onSuccess = () => {
+      this.props.enableTouchId(this.props.username, this.state.password);
+      this.props.navigation.goBack();
+    };
+
     this.props.fetchLogin(
       this.props.username,
       this.state.password,
-      true,
-      this.props.navigation.goBack,
+      onSuccess,
     );
   };
 
@@ -90,5 +95,6 @@ export default connect(
   }),
   {
     fetchLogin,
+    enableTouchId,
   },
 )(LoginScreen);
