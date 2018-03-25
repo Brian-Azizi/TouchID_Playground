@@ -4,8 +4,16 @@ import {
   getGenericPassword,
   resetGenericPassword,
 } from 'react-native-keychain';
-
+import { Platform } from 'react-native';
 import { fetchLogin } from './login.actions';
+
+const FATAL_ERRORS = [
+  'LAErrorPasscodeNotSet',
+  'LAErrorTouchIDNotAvailable',
+  'LAErrorTouchIDNotEnrolled',
+  'RCTTouchIDUnknownError',
+  'RCTTouchIDNotSupported',
+];
 
 export const GET_TOUCH_ID_SUPPORT = {
   REQUEST: 'GET_TOUCH_ID_SUPPORT.REQUEST',
@@ -64,22 +72,40 @@ export const getTouchIdCredentials = () => dispatch => {
     .catch(error => dispatch({ type: GET_TOUCH_ID_CREDENTIALS.ERROR, error: error.message }));
 };
 
-export const fetchTouchIdLogin = () => dispatch => {
-  dispatch({ type: TOUCH_ID_LOGIN.REQUEST });
-  getGenericPassword()
-    .then(credentials => {
-      const { username, password } = credentials;
-      TouchID.authenticate(`to login with username "${username}"`).then(() => {
-        dispatch(fetchLogin(username, password, false));
-        dispatch({ type: TOUCH_ID_LOGIN.SUCCESS });
-      }).catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
-    })
-    .catch(error => dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: error.message }));
-};
-
 export const disableTouchId = () => dispatch => {
   dispatch({ type: DISABLE_TOUCH_ID.REQUEST });
   resetGenericPassword()
     .then(() => dispatch({ type: DISABLE_TOUCH_ID.SUCCESS }))
     .catch(error => dispatch({ type: DISABLE_TOUCH_ID.ERROR, error: error.message }));
+};
+
+export const fetchTouchIdLogin = () => dispatch => {
+  dispatch({ type: TOUCH_ID_LOGIN.REQUEST });
+  getGenericPassword()
+    .then(credentials => {
+      const { username, password } = credentials;
+      TouchID.authenticate(`to login with username "${username}"`)
+        .then(() => {
+          dispatch(fetchLogin(username, password, false));
+          dispatch({ type: TOUCH_ID_LOGIN.SUCCESS });
+        })
+        .catch(error => {
+          if (Platform.OS === 'ios' && FATAL_ERRORS.includes(error.message)) {
+            dispatch({
+              type: TOUCH_ID_LOGIN.ERROR,
+              error: 'Something went wrong. We have turned off Touch ID login.',
+            });
+            dispatch(disableTouchId());
+          } else {
+            dispatch({ type: TOUCH_ID_LOGIN.ERROR, error: null });
+          }
+        });
+    })
+    .catch(() => {
+      dispatch({
+        type: TOUCH_ID_LOGIN.ERROR,
+        error: 'Something went wrong. We have turned off Touch ID login.',
+      });
+      dispatch(disableTouchId()); // Wrong credentials in keychain => disable touch id
+    });
 };
